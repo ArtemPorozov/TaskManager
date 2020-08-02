@@ -73,13 +73,20 @@ class AddingTaskController: UIViewController, UITextFieldDelegate {
         self.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
         // dismissing the keyboard by tapping the screen
-        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
+//        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(addSubtask))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
         
         stackView.arrangedSubviews.forEach({ $0.isUserInteractionEnabled = true })
         stackView.arrangedSubviews.forEach({ $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(selectColor))) })
     }
+    
+        @objc fileprivate func addSubtask() {
+                    
+            self.view.endEditing(true)
+            subtasksList.saveSubtask()
+        }
     
     var selectedColor: UIColor?
     

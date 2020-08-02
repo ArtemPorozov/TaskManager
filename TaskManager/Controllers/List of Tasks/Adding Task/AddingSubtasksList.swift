@@ -74,20 +74,29 @@ class AddingSubtasksList: BaseSubtasksList {
         if textField.text! == "" {
             return false
         } else {
-            let subtask = Subtask()
-            subtask.name = textField.text!
-            self.subtasksArray.append(subtask)
-            
-            self.subtasks.append(subtask)
-            
-            textField.resignFirstResponder()
-            
-            self.numItems! += 1
-            
-            collectionView.reloadData()
-            self.view.heightAnchor.constraint(greaterThanOrEqualToConstant: CGFloat(self.numItems ?? 0) * self.itemHeight).isActive = true
-            
+            saveSubtask()
             return true
         }
+    }
+    
+    func saveSubtask() {
+        
+        let indexPath = IndexPath(item: subtasks.count, section: 0)
+        let cell = collectionView.cellForItem(at: indexPath) as! AddSubtaskCell
+        
+        let textField = cell.textField
+        
+        let subtask = Subtask()
+        subtask.name = textField.text!
+        self.subtasksArray.append(subtask)
+        
+        self.subtasks.append(subtask)
+        
+        textField.resignFirstResponder()
+        
+        self.numItems! += 1
+        
+        collectionView.reloadData()
+        self.view.heightAnchor.constraint(greaterThanOrEqualToConstant: CGFloat(self.numItems ?? 0) * self.itemHeight).isActive = true
     }
 }

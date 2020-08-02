@@ -164,7 +164,7 @@ class SubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDelegate {
 //            return true
             
             saveSubtask()
-            textField.resignFirstResponder()
+//            textField.resignFirstResponder()
             return true
         }
     }
