@@ -195,7 +195,6 @@ class TasksListController: UICollectionViewController, AddingTaskControllerDeleg
                 } else {
                     cell.backgroundColor = .white
                 }
-                
                 return cell
             }
         } else {
@@ -240,11 +239,9 @@ class TasksListController: UICollectionViewController, AddingTaskControllerDeleg
         
         if indexPath.row == 0 {
             if indexPath.section == 0 {
-                
                 print("TaskNameHeaderCell")
                 // do nothing
             } else {
-                
                 print("TaskNameCell")
                 guard let task = tasks?[indexPath.section - 1] else { return }
                 let taskController = TaskController(task: task)
@@ -253,7 +250,6 @@ class TasksListController: UICollectionViewController, AddingTaskControllerDeleg
             }
         } else {
             if indexPath.section == 0 {
-                
                 print("DayHeaderCell")
                 // do nothing
             } else {
@@ -281,7 +277,6 @@ class TasksListController: UICollectionViewController, AddingTaskControllerDeleg
                             }
                         }
                     }
-                    
                     let vc = TaskForSelectedDayController(task: taskForDayToPresent)
                     navigationController?.pushViewController(vc, animated: true)
                 }
@@ -290,61 +285,71 @@ class TasksListController: UICollectionViewController, AddingTaskControllerDeleg
     }
     
     
-    
-//    override func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
-//
-//        if indexPath.section == 0 {
-//            return false
-//        } else {
-//            return true
-//        }
-//    }
-//
-//    override func collectionView(_ collectionView: UICollectionView, targetIndexPathForMoveFromItemAt originalIndexPath: IndexPath, toProposedIndexPath proposedIndexPath: IndexPath) -> IndexPath {
-//        if proposedIndexPath.row == 0 {
-//            return IndexPath(row: proposedIndexPath.row + 1, section: proposedIndexPath.section)
-//        } else {
-//            return proposedIndexPath
-//        }
-//    }
-//
-//    @objc func handleLongGesture(gesture: UILongPressGestureRecognizer) {
-//
-//        switch(gesture.state) {
-//        case .began:
-//            guard let selectedIndexPath = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { break }
-//            print("selectedIndexPath: ", selectedIndexPath)
-//            collectionView.beginInteractiveMovementForItem(at: selectedIndexPath)
-//        case .changed:
-//            collectionView.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view!))
-//        case .ended:
-//            collectionView.endInteractiveMovement()
-//        default:
-//            collectionView.cancelInteractiveMovement()
-//        }
-//    }
-//
-//    override func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-//
-//        let realm = try! Realm()
-//
-////        try! realm.write {
-////
-//////    tasks = realm.objects(Task.self)
-////
-////
-////            if let tasks = self.tasks {
-////                let task = tasks[sourceIndexPath.section - 1]
-////                tasks.remove(at: sourceIndexPath.item)
-////                tasks.insert(task, at: destinationIndexPath.item)
-////            }
-////        }
-//        collectionView.reloadData()
-//    }
-    
-    
-    
-    
+    override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        
+        if indexPath.row == 0 {
+            if indexPath.section == 0 {
+                return nil
+            } else {
+                let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { actions -> UIMenu? in
+                    let action = UIAction(title: "Delete", image: UIImage(systemName: "trash.fill")) { action in
+                        
+                        guard let task = self.tasks?[indexPath.section - 1] else { return }
+                        let realm = try! Realm()
+                        let tasksForDay = realm.objects(TaskForDay.self)
+                        
+                        try! realm.write {
+                            for taskForDay in tasksForDay {
+                                if taskForDay.name == task.name && taskForDay.id == task.id {
+                                    realm.delete(taskForDay)
+                                }
+                            }
+                            realm.delete(task)
+                        }
+                        collectionView.reloadData()
+                    }
+                    return UIMenu(title: "Menu", children: [action])
+                }
+                return configuration
+            }
+        } else {
+            if indexPath.section == 0 {
+                return nil
+            } else {
+                let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { actions -> UIMenu? in
+                    let action = UIAction(title: "Delete", image: UIImage(systemName: "trash.fill")) { action in
+                        
+                        let cell = collectionView.cellForItem(at: indexPath) as! DayCell
+                        if cell.progressLabel.text == "+" {
+                            var taskForDayToDelete = TaskForDay()
+                            let day = self.days[indexPath.item - 1]
+                            
+                            for taskDay in self.taskDays! {
+                                if (taskDay.date == String(day.date)) && (taskDay.month == day.month) && (taskDay.year == String(day.year)) {
+                                    
+                                    let task = self.tasks?[indexPath.section - 1]
+                                    for taskForDay in taskDay.tasks {
+                                        if taskForDay.id == task?.id {
+                                            taskForDayToDelete = taskForDay
+                                        }
+                                    }
+                                }
+                            }
+                            let realm = try! Realm()
+                            
+                            try! realm.write {
+                                realm.delete(taskForDayToDelete)
+                            }
+                            cell.progressLabel.text = ""
+                            collectionView.reloadData()
+                        }
+                    }
+                    return UIMenu(title: "Menu", children: [action])
+                }
+                return configuration
+            }
+        }
+    }
     
     fileprivate func createDayEntity(for indexPath: IndexPath) {
 
