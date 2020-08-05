@@ -284,7 +284,6 @@ class TasksListController: UICollectionViewController, AddingTaskControllerDeleg
         }
     }
     
-    
     override func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         
         if indexPath.row == 0 {
@@ -293,22 +292,9 @@ class TasksListController: UICollectionViewController, AddingTaskControllerDeleg
             } else {
                 let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { actions -> UIMenu? in
                     let action = UIAction(title: "Delete", image: UIImage(systemName: "trash.fill")) { action in
-                        
-                        guard let task = self.tasks?[indexPath.section - 1] else { return }
-                        let realm = try! Realm()
-                        let tasksForDay = realm.objects(TaskForDay.self)
-                        
-                        try! realm.write {
-                            for taskForDay in tasksForDay {
-                                if taskForDay.name == task.name && taskForDay.id == task.id {
-                                    realm.delete(taskForDay)
-                                }
-                            }
-                            realm.delete(task)
-                        }
-                        collectionView.reloadData()
+                        self.deleteTask(indexPath: indexPath)
                     }
-                    return UIMenu(title: "Menu", children: [action])
+                    return UIMenu(title: "", children: [action])
                 }
                 return configuration
             }
@@ -318,38 +304,60 @@ class TasksListController: UICollectionViewController, AddingTaskControllerDeleg
             } else {
                 let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { actions -> UIMenu? in
                     let action = UIAction(title: "Delete", image: UIImage(systemName: "trash.fill")) { action in
-                        
-                        let cell = collectionView.cellForItem(at: indexPath) as! DayCell
-                        if cell.progressLabel.text == "+" {
-                            var taskForDayToDelete = TaskForDay()
-                            let day = self.days[indexPath.item - 1]
-                            
-                            for taskDay in self.taskDays! {
-                                if (taskDay.date == String(day.date)) && (taskDay.month == day.month) && (taskDay.year == String(day.year)) {
-                                    
-                                    let task = self.tasks?[indexPath.section - 1]
-                                    for taskForDay in taskDay.tasks {
-                                        if taskForDay.id == task?.id {
-                                            taskForDayToDelete = taskForDay
-                                        }
-                                    }
-                                }
-                            }
-                            let realm = try! Realm()
-                            
-                            try! realm.write {
-                                realm.delete(taskForDayToDelete)
-                            }
-                            cell.progressLabel.text = ""
-                            collectionView.reloadData()
-                        }
+                        self.deleteTaskForDay(indexPath: indexPath)
                     }
-                    return UIMenu(title: "Menu", children: [action])
+                    return UIMenu(title: "", children: [action])
                 }
                 return configuration
             }
         }
     }
+    
+    fileprivate func deleteTask(indexPath: IndexPath) {
+        
+        guard let task = self.tasks?[indexPath.section - 1] else { return }
+        let realm = try! Realm()
+        let tasksForDay = realm.objects(TaskForDay.self)
+        
+        try! realm.write {
+            for taskForDay in tasksForDay {
+                if taskForDay.name == task.name && taskForDay.id == task.id {
+                    realm.delete(taskForDay)
+                }
+            }
+            realm.delete(task)
+        }
+        collectionView.reloadData()
+    }
+    
+    fileprivate func deleteTaskForDay(indexPath: IndexPath) {
+        
+        let cell = collectionView.cellForItem(at: indexPath) as! DayCell
+        if cell.progressLabel.text == "+" {
+            var taskForDayToDelete = TaskForDay()
+            let day = self.days[indexPath.item - 1]
+            
+            for taskDay in self.taskDays! {
+                if (taskDay.date == String(day.date)) && (taskDay.month == day.month) && (taskDay.year == String(day.year)) {
+                    
+                    let task = self.tasks?[indexPath.section - 1]
+                    for taskForDay in taskDay.tasks {
+                        if taskForDay.id == task?.id {
+                            taskForDayToDelete = taskForDay
+                        }
+                    }
+                }
+            }
+            let realm = try! Realm()
+            
+            try! realm.write {
+                realm.delete(taskForDayToDelete)
+            }
+            cell.progressLabel.text = ""
+            collectionView.reloadData()
+        }
+    }
+    
     
     fileprivate func createDayEntity(for indexPath: IndexPath) {
 
