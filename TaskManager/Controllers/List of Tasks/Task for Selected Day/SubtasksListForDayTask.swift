@@ -93,49 +93,6 @@ class SubtasksListForDayTask: BaseSubtasksList, SwipeableCollectionViewCellDeleg
         }
     }
     
-//    func readSubtasks(subtasks: List<Subtask>) {
-//
-//        let realm = try! Realm()
-//
-//        if let dayId = self.taskForDay?.dayId {
-//            let task = realm.objects(TaskForDay.self).filter("dayId = '\(dayId)'").first
-//
-//            guard let subtasksExist = task?.subtasks else { return }
-//            var results: Results<Subtask>
-//
-//            if subtasksExist.count == 0 {
-//                try! realm.write {
-//                    subtasksExist.append(objectsIn: subtasks)
-//                    self.subtasks = subtasksExist
-//                }
-//            } else {
-//                for i in 0...subtasks.count-1 {
-//                    let myPredicate = NSPredicate(format: "name != '\(subtasks[i].name)'")
-//                    results = subtasksExist.filter(myPredicate)
-//
-//                    let filtered = results.reduce(List<Subtask>()) { (list, element) -> List<Subtask> in
-//                        list.append(element)
-//                        return list
-//                    }
-//                    try! realm.write {
-//                        subtasksExist.removeAll()
-//                        subtasksExist.append(objectsIn: filtered)
-//                    }
-//                }
-//                try! realm.write {
-//                    subtasksExist.append(objectsIn: subtasks)
-//                    self.subtasks = task?.subtasks
-//                }
-//            }
-//        }
-//        if let subtasksNumber = self.subtasks?.count {
-//            numItems = subtasksNumber + 1
-//        }
-//        self.collectionView.reloadData()
-//        delegate?.updateCollectionView()
-//    }
-    
-
     override func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
                 
         if (collectionView.cellForItem(at: indexPath) as? AddSubtaskCell) != nil {

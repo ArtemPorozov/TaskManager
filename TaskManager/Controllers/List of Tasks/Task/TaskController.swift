@@ -9,17 +9,11 @@
 import UIKit
 import RealmSwift
 
-//protocol TaskControllerDelegate: class {
-//    func cancelDeletion()
-//}
-
-//protocol TaskControllerDelegate: class {
-//    func saveSubtask()
-//}
-
-class TaskController: UIViewController, UITextFieldDelegate {
+final class TaskController: UIViewController, UITextFieldDelegate {
     
-    let scrollView: UIScrollView = {
+    // MARK: - Private Properties
+
+    private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.backgroundColor = .white
         scrollView.alwaysBounceVertical = true
@@ -29,7 +23,7 @@ class TaskController: UIViewController, UITextFieldDelegate {
         return scrollView
     }()
     
-    let tasksTitleLabel: UILabel = {
+    private let tasksTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Task"
         label.font = .boldSystemFont(ofSize: 42)
@@ -37,7 +31,7 @@ class TaskController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let textField: UITextField = {
+    private let textField: UITextField = {
         let textField = UITextField()
         textField.textAlignment = .left
         textField.font = .boldSystemFont(ofSize: 42)
@@ -45,7 +39,7 @@ class TaskController: UIViewController, UITextFieldDelegate {
         return textField
     }()
     
-    let subtasksTitleLabel: UILabel = {
+    private let subtasksTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "Subtasks"
         label.font = .boldSystemFont(ofSize: 30)
@@ -53,89 +47,78 @@ class TaskController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let subtasksList = SubtasksList()
-    
-    var task: Task?
-    
-//    weak var delegate: TaskControllerDelegate?
+    private let subtasksList = SubtasksList()
+    private var task: Task?
+    private var scrollViewBottomAnchor: NSLayoutConstraint?
+        
+    // MARK: - Initializers
     
     init(task: Task) {
         self.task = task
         super.init(nibName: nil, bundle: nil)
+        self.subtasksList.subtasks = task.subtasks
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-                
-        view.backgroundColor = .white
-        navigationItem.title = "Task"
-        navigationItem.setRightBarButton(.init(barButtonSystemItem: .edit, target: self, action: #selector(editTask)), animated: true)
-        
-        tasksTitleLabel.text = task?.name
-        if let subtasks = task?.subtasks {
-            self.subtasksList.subtasks = subtasks
-        }
-        
+
+        setupNavigationBar()
         setupViews()
-        
-        self.subtasksList.setEditing(true, animated: true)
-        
         setupKeyboardObservers()
+        // dismissing the keyboard by tapping the screen
+        setupGestureRecognizer()
         
         self.textField.delegate = self
-//        self.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-        
-        // dismissing the keyboard by tapping the screen
-//        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing(_:)))
-        let tap = UITapGestureRecognizer(target: self, action: #selector(addSubtask))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-        
-//        let cancelDeletionTap = UITapGestureRecognizer(target: self, action: #selector(hideDeleteLabel))
-//        view.addGestureRecognizer(cancelDeletionTap)
-
+        self.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
     }
     
-    @objc fileprivate func addSubtask() {
-                
-        self.view.endEditing(true)
-                
-//        delegate?.saveSubtask()
-//        print("delegate: ", delegate)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
 
-        subtasksList.saveSubtask()
+        let contentHeight = 24 + tasksTitleLabel.frame.height + 24 + subtasksTitleLabel.frame.height + 16 + subtasksList.collectionView.contentSize.height + 48
+        scrollView.contentSize = CGSize(width: view.frame.width, height: contentHeight)
     }
     
-//    @objc fileprivate func hideDeleteLabel() {
-//
-//        print("cancel")
-//        self.view.endEditing(true)
-//    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
     
-    @objc fileprivate func editTask() {
+    // MARK: - Private Methods
+    
+    private func setupNavigationBar() {
+        navigationItem.title = "Task"
+        navigationItem.setRightBarButton(.init(barButtonSystemItem: .edit, target: self, action: #selector(editTask)), animated: true)
+    }
+    
+    @objc private func editTask() {
         
         navigationItem.setRightBarButton(.init(barButtonSystemItem: .done, target: self, action: #selector(saveTask)), animated: true)
         
         tasksTitleLabel.isHidden = true
         
-        textField.text! = tasksTitleLabel.text!
+        if let tasksTitleLabelText = self.tasksTitleLabel.text {
+            textField.text = tasksTitleLabelText
+        }
+        
         textField.isHidden = false
         textField.becomeFirstResponder()
     }
 
-    @objc fileprivate func saveTask() {
+    @objc private func saveTask() {
         
         let realm = try! Realm()
         
         try! realm.write {
             guard let taskOriginName = task?.name else { return }
-            task?.name = self.textField.text!
-            if let subtasks = subtasksList.subtasks {
-                task?.subtasks = subtasks
+            if let typedText = self.textField.text {
+                task?.name = typedText
             }
             
             let tasksForDay = realm.objects(TaskForDay.self)
@@ -143,11 +126,10 @@ class TaskController: UIViewController, UITextFieldDelegate {
             let tasksForDayFiltered = tasksForDay.filter(myPredicate)
             
             for task in tasksForDayFiltered {
-                if task.id == self.task?.id {
-                    task.name = self.textField.text!
+                if task.id == self.task?.id, let typedText = self.textField.text {
+                    task.name = typedText
                 }
             }
-            // print("updated task: ", task as Any)
         }
         
         tasksTitleLabel.text = task?.name
@@ -159,66 +141,10 @@ class TaskController: UIViewController, UITextFieldDelegate {
         navigationItem.setRightBarButton(.init(barButtonSystemItem: .edit, target: self, action: #selector(editTask)), animated: true)
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        if textField.text! == "" {
-            return false
-        } else {
-            textField.resignFirstResponder()
-            return true
-        }
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-
-        let contentHeight = 24 + tasksTitleLabel.frame.height + 24 + subtasksTitleLabel.frame.height + 16 + subtasksList.collectionView.contentSize.height + 48
-        scrollView.contentSize = CGSize(width: view.frame.width, height: contentHeight)
-    }
-    
-    func setupKeyboardObservers() {
-
-        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-
-        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    @objc func handleKeyboardWillShow(notification: NSNotification) {
-        
-        let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
-        let keyboardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
-        
-        scrollViewBottomAnchor?.constant = -keyboardFrame!.height
-        
-        var contentInset: UIEdgeInsets = self.scrollView.contentInset
-        contentInset.bottom = 24
-        scrollView.contentInset = contentInset
-        
-        UIView.animate(withDuration: keyboardDuration!) {
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    @objc func handleKeyboardWillHide(notification: NSNotification) {
-        
-        let keyboardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
-        
-        scrollViewBottomAnchor?.constant = -48
-        UIView.animate(withDuration: keyboardDuration!) {
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    var scrollViewBottomAnchor: NSLayoutConstraint?
-
-    fileprivate func setupViews() {
+    private func setupViews() {
                 
+        view.backgroundColor = .white
+
         view.addSubview(scrollView)
         scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
@@ -232,6 +158,8 @@ class TaskController: UIViewController, UITextFieldDelegate {
         tasksTitleLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16).isActive = true
         tasksTitleLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16).isActive = true
         tasksTitleLabel.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        
+        tasksTitleLabel.text = task?.name
         
         scrollView.addSubview(textField)
         textField.text = tasksTitleLabel.text
@@ -256,5 +184,70 @@ class TaskController: UIViewController, UITextFieldDelegate {
         subtasksList.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         
         subtasksList.view.heightAnchor.constraint(greaterThanOrEqualToConstant: CGFloat(subtasksList.numItems ?? 0) * subtasksList.itemHeight).isActive = true
-    }    
+    }
+    
+    private func setupKeyboardObservers() {
+
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc private func handleKeyboardWillShow(notification: NSNotification) {
+        
+        guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        guard let keyboardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else { return }
+        
+        scrollViewBottomAnchor?.constant = -keyboardFrame.height
+        
+        var contentInset: UIEdgeInsets = self.scrollView.contentInset
+        contentInset.bottom = 24
+        scrollView.contentInset = contentInset
+        
+        UIView.animate(withDuration: keyboardDuration) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    @objc private func handleKeyboardWillHide(notification: NSNotification) {
+        
+        guard let keyboardDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else { return }
+        scrollViewBottomAnchor?.constant = -48
+        UIView.animate(withDuration: keyboardDuration) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func setupGestureRecognizer() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(addSubtask))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc private func addSubtask() {
+        self.view.endEditing(true)
+        subtasksList.saveSubtask()
+    }
+    
+    // MARK: - TextFieldDelegate
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        if textField.text == "" {
+            return false
+        } else {
+            textField.resignFirstResponder()
+            return true
+        }
+    }
+    
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        
+        if self.textField.text == "" {
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
+        } else {
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
+        }
+    }
+    
 }
