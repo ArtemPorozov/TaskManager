@@ -19,9 +19,7 @@ final class SubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDelegate 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        collectionView.register(SubtaskCell.self, forCellWithReuseIdentifier: CellType.subtask.rawValue)
-        collectionView.register(AddSubtaskCell.self, forCellWithReuseIdentifier: CellType.addSubtask.rawValue)
+        registerCells()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -127,7 +125,12 @@ final class SubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDelegate 
     }
     
     // MARK: - Private Methods
-
+    
+    private func registerCells() {
+        collectionView.register(SubtaskCell.self, forCellWithReuseIdentifier: CellType.subtask.rawValue)
+        collectionView.register(AddSubtaskCell.self, forCellWithReuseIdentifier: CellType.addSubtask.rawValue)
+    }
+    
     private func setupGesture() {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongGesture))
         collectionView.addGestureRecognizer(longPressGesture)
