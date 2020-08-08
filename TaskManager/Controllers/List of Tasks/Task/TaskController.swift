@@ -47,8 +47,8 @@ final class TaskController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    private let subtasksList = SubtasksList()
     private var task: Task?
+    private let subtasksList = SubtasksList()
     private var scrollViewBottomAnchor: NSLayoutConstraint?
         
     // MARK: - Initializers
@@ -72,7 +72,7 @@ final class TaskController: UIViewController, UITextFieldDelegate {
         setupViews()
         setupKeyboardObservers()
         // dismissing the keyboard by tapping the screen
-        setupGestureRecognizer()
+        setupGesture()
         
         self.textField.delegate = self
         self.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -218,7 +218,7 @@ final class TaskController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    private func setupGestureRecognizer() {
+    private func setupGesture() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(addSubtask))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
@@ -229,7 +229,7 @@ final class TaskController: UIViewController, UITextFieldDelegate {
         subtasksList.saveSubtask()
     }
     
-    // MARK: - TextFieldDelegate
+    // MARK: - Text Field Delegate
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
