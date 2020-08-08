@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class SubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDelegate {
+final class SubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDelegate {
 
     // MARK: - Public Properties
 
@@ -196,4 +196,5 @@ class SubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDelegate {
             self.collectionView.deleteItems(at: [indexPath])
         })
     }
+    
 }

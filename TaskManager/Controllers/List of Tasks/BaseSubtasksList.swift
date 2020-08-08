@@ -10,9 +10,19 @@ import UIKit
 
 class BaseSubtasksList: UICollectionViewController, UICollectionViewDelegateFlowLayout, UITextFieldDelegate {
     
+    // MARK: - Public Properties
+
     var numItems: Int?
     var itemHeight: CGFloat = 36
     
+    enum CellType: String {
+        case subtask
+        case addSubtask
+        case selectSubtask
+    }
+    
+    // MARK: - Initializers
+
     init() {
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
     }
@@ -21,28 +31,25 @@ class BaseSubtasksList: UICollectionViewController, UICollectionViewDelegateFlow
         fatalError("init(coder:) has not been implemented")
     }
     
-    enum CellType: String {
-        case subtask
-        case addSubtask
-        case selectSubtask
-    }
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupCollectionView()
+        numItems = collectionView.numberOfItems(inSection: 0)
+    }
+    
+    // MARK: - Private Methods
+
+    private func setupCollectionView() {
         collectionView.backgroundColor = .white
-        
-        self.collectionView.contentInsetAdjustmentBehavior = .never
-        
-//        collectionView.register(SubtaskCell.self, forCellWithReuseIdentifier: CellType.subtask.rawValue)
-//        collectionView.register(AddSubtaskCell.self, forCellWithReuseIdentifier: CellType.addSubtask.rawValue)
-        
+        collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.showsVerticalScrollIndicator = false
         collectionView.isScrollEnabled = false
-        
-        numItems = collectionView.numberOfItems(inSection: 0)
-        
     }
+    
+    // MARK: - Collection View Delegate
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return .init(width: view.frame.width, height: itemHeight)
@@ -55,4 +62,5 @@ class BaseSubtasksList: UICollectionViewController, UICollectionViewDelegateFlow
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
+    
 }
