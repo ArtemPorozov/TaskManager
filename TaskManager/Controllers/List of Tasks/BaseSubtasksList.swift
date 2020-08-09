@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class BaseSubtasksList: UICollectionViewController, UICollectionViewDelegateFlowLayout, UITextFieldDelegate {
     
@@ -14,7 +15,7 @@ class BaseSubtasksList: UICollectionViewController, UICollectionViewDelegateFlow
 
     var numItems: Int?
     var itemHeight: CGFloat = 36
-    
+        
     enum CellType: String {
         case subtask
         case addSubtask
@@ -38,15 +39,7 @@ class BaseSubtasksList: UICollectionViewController, UICollectionViewDelegateFlow
         
         setupCollectionView()
         numItems = collectionView.numberOfItems(inSection: 0)
-    }
-    
-    // MARK: - Private Methods
-
-    private func setupCollectionView() {
-        collectionView.backgroundColor = .white
-        collectionView.contentInsetAdjustmentBehavior = .never
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.isScrollEnabled = false
+        registerCells()
     }
     
     // MARK: - Collection View Delegate
@@ -63,4 +56,18 @@ class BaseSubtasksList: UICollectionViewController, UICollectionViewDelegateFlow
         return 0
     }
     
+    // MARK: - Private Methods
+
+    private func setupCollectionView() {
+        collectionView.backgroundColor = .white
+        collectionView.contentInsetAdjustmentBehavior = .never
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.isScrollEnabled = false
+    }
+    
+    private func registerCells() {
+        collectionView.register(SubtaskCell.self, forCellWithReuseIdentifier: CellType.subtask.rawValue)
+        collectionView.register(AddSubtaskCell.self, forCellWithReuseIdentifier: CellType.addSubtask.rawValue)
+    }
+      
 }

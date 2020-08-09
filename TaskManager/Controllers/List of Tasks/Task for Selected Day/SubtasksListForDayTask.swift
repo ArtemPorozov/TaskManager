@@ -13,34 +13,49 @@ protocol SubtasksListForDayTaskDelegate: class {
     func updateCollectionView()
 }
 
-class SubtasksListForDayTask: BaseSubtasksList, SwipeableCollectionViewCellDelegate, SelectingSubtasksControllerDelegate {
+final class SubtasksListForDayTask: BaseSubtasksList, SwipeableCollectionViewCellDelegate, SelectingSubtasksControllerDelegate {
     
+    // MARK: - Public Properties
+
     weak var delegate: SubtasksListForDayTaskDelegate?
     
-    var task: Task?
-
     var taskForDay: TaskForDay?
-
     var subtasks: List<Subtask>?
     
-    var selectingSubtaskController: SelectingSubtasksController? {
+    // MARK: - Private Properties
+
+    private var task: Task?
+    
+    private var selectingSubtaskController: SelectingSubtasksController? {
         didSet {
             selectingSubtaskController?.delegate = self
         }
     }
     
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        collectionView.backgroundColor = .white
-        
-        collectionView.register(SubtaskCell.self, forCellWithReuseIdentifier: CellType.subtask.rawValue)
-        collectionView.register(AddSubtaskCell.self, forCellWithReuseIdentifier: CellType.addSubtask.rawValue)
-        
         readTask()
     }
-
     
+    override func viewWillAppear(_ animated: Bool) {
+        setupGesture()
+    }
+    
+    // MARK: - Collection View Delegate
+
+    override func collectionView(_ collectionView: UICollectionView, targetIndexPathForMoveFromItemAt originalIndexPath: IndexPath, toProposedIndexPath proposedIndexPath: IndexPath) -> IndexPath {
+        if let subtasks = subtasks {
+            if proposedIndexPath.item == subtasks.count {
+                return IndexPath(row: proposedIndexPath.item - 1, section: proposedIndexPath.section)
+            }
+        }
+        return proposedIndexPath
+    }
+
+    // MARK: - Collection View Data Source
+
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -75,59 +90,12 @@ class SubtasksListForDayTask: BaseSubtasksList, SwipeableCollectionViewCellDeleg
         }
     }
     
-    @objc fileprivate func addSubtask(gesture: UIGestureRecognizer) {
-
-        let selectingSubtaskController = SelectingSubtasksController(task: task!)
-        self.selectingSubtaskController = selectingSubtaskController
-        present(UINavigationController(rootViewController: selectingSubtaskController), animated: true, completion: nil)
-    }
-    
-    fileprivate func readTask() {
-        
-        let realm = try! Realm()
-        let tasks = realm.objects(Task.self)
-        for task in tasks {
-            if task.id == self.taskForDay?.id {
-                self.task = task
-            }
-        }
-    }
-    
     override func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
                 
         if (collectionView.cellForItem(at: indexPath) as? AddSubtaskCell) != nil {
             return false
         } else {
             return true
-        }
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, targetIndexPathForMoveFromItemAt originalIndexPath: IndexPath, toProposedIndexPath proposedIndexPath: IndexPath) -> IndexPath {
-        if let subtasks = subtasks {
-            if proposedIndexPath.item == subtasks.count {
-                return IndexPath(row: proposedIndexPath.item - 1, section: proposedIndexPath.section)
-            }
-        }
-        return proposedIndexPath
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongGesture))
-        collectionView.addGestureRecognizer(longPressGesture)
-    }
-
-    @objc func handleLongGesture(gesture: UILongPressGestureRecognizer) {
-        
-        switch(gesture.state) {
-        case .began:
-            guard let selectedIndexPath = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { break }
-            collectionView.beginInteractiveMovementForItem(at: selectedIndexPath)
-        case .changed:
-            collectionView.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view!))
-        case .ended:
-            collectionView.endInteractiveMovement()
-        default:
-            collectionView.cancelInteractiveMovement()
         }
     }
     
@@ -144,6 +112,66 @@ class SubtasksListForDayTask: BaseSubtasksList, SwipeableCollectionViewCellDeleg
         }
         collectionView.reloadData()
     }
+    
+    // MARK: - Private Methods
+    
+    private func setupGesture() {
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongGesture))
+        collectionView.addGestureRecognizer(longPressGesture)
+    }
+    
+    @objc func handleLongGesture(gesture: UILongPressGestureRecognizer) {
+        
+        switch(gesture.state) {
+        case .began:
+            guard let selectedIndexPath = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { break }
+            collectionView.beginInteractiveMovementForItem(at: selectedIndexPath)
+        case .changed:
+            collectionView.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view))
+        case .ended:
+            collectionView.endInteractiveMovement()
+        default:
+            collectionView.cancelInteractiveMovement()
+        }
+    }
+    
+    @objc private func addSubtask(gesture: UIGestureRecognizer) {
+
+        let selectingSubtaskController = SelectingSubtasksController(task: task!)
+        self.selectingSubtaskController = selectingSubtaskController
+        present(UINavigationController(rootViewController: selectingSubtaskController), animated: true, completion: nil)
+    }
+    
+    private func readTask() {
+        
+        let realm = try! Realm()
+        let tasks = realm.objects(Task.self)
+        for task in tasks {
+            if task.id == self.taskForDay?.id {
+                self.task = task
+            }
+        }
+    }
+    
+    // MARK: - Swipeable Collection View Cell Delegate
+
+    func deleteLabelTapped(inCell cell: UICollectionViewCell) {
+        
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        
+        let realm = try! Realm()
+        
+        try! realm.write {
+            if let subtasks = self.subtasks {
+                subtasks.remove(at: indexPath.item)
+            }
+        }
+        collectionView.performBatchUpdates({
+            self.collectionView.deleteItems(at: [indexPath])
+        })
+    }
+    
+    // MARK: - Selecting Subtasks Controller Delegate
     
     func readSubtasks(subtasks: List<Subtask>) {
         
@@ -183,20 +211,5 @@ class SubtasksListForDayTask: BaseSubtasksList, SwipeableCollectionViewCellDeleg
         self.collectionView.reloadData()
         delegate?.updateCollectionView()
     }
-
-    func deleteLabelTapped(inCell cell: UICollectionViewCell) {
-        
-        guard let indexPath = collectionView.indexPath(for: cell) else { return }
-        
-        let realm = try! Realm()
-        
-        try! realm.write {
-            if let subtasks = self.subtasks {
-                subtasks.remove(at: indexPath.item)
-            }
-        }
-        collectionView.performBatchUpdates({
-            self.collectionView.deleteItems(at: [indexPath])
-        })
-    }
+    
 }

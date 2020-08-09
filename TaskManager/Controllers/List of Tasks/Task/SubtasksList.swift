@@ -19,11 +19,21 @@ final class SubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDelegate 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerCells()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         setupGesture()
+    }
+    
+    // MARK: - Collection View Delegate
+    
+    override func collectionView(_ collectionView: UICollectionView, targetIndexPathForMoveFromItemAt originalIndexPath: IndexPath, toProposedIndexPath proposedIndexPath: IndexPath) -> IndexPath {
+        if let subtasks = subtasks {
+            if proposedIndexPath.item == subtasks.count {
+                return IndexPath(item: proposedIndexPath.item - 1, section: proposedIndexPath.section)
+            }
+        }
+        return proposedIndexPath
     }
     
     // MARK: - Collection View Data Source
@@ -43,7 +53,6 @@ final class SubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDelegate 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.item == subtasks?.count {
-            
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellType.addSubtask.rawValue, for: indexPath) as! AddSubtaskCell
             
             cell.textField.isUserInteractionEnabled = false
@@ -70,15 +79,6 @@ final class SubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDelegate 
         } else {
             return true
         }
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, targetIndexPathForMoveFromItemAt originalIndexPath: IndexPath, toProposedIndexPath proposedIndexPath: IndexPath) -> IndexPath {
-        if let subtasks = subtasks {
-            if proposedIndexPath.item == subtasks.count {
-                return IndexPath(item: proposedIndexPath.item - 1, section: proposedIndexPath.section)
-            }
-        }
-        return proposedIndexPath
     }
     
     override func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
@@ -126,11 +126,6 @@ final class SubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDelegate 
     
     // MARK: - Private Methods
     
-    private func registerCells() {
-        collectionView.register(SubtaskCell.self, forCellWithReuseIdentifier: CellType.subtask.rawValue)
-        collectionView.register(AddSubtaskCell.self, forCellWithReuseIdentifier: CellType.addSubtask.rawValue)
-    }
-    
     private func setupGesture() {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongGesture))
         collectionView.addGestureRecognizer(longPressGesture)
@@ -143,7 +138,7 @@ final class SubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDelegate 
             guard let selectedIndexPath = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { break }
             collectionView.beginInteractiveMovementForItem(at: selectedIndexPath)
         case .changed:
-            collectionView.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view!))
+            collectionView.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view))
         case .ended:
             collectionView.endInteractiveMovement()
         default:

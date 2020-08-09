@@ -11,29 +11,33 @@ import RealmSwift
 
 class AddingSubtasksList: BaseSubtasksList {
     
-    var subtasksArray = [Subtask]()
+    // MARK: - Public Properties
+
     var subtasks = List<Subtask>()
     
+    // MARK: - Private Properties
+
+    private var subtasksArray = [Subtask]()
+
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        collectionView.register(SubtaskCell.self, forCellWithReuseIdentifier: CellType.subtask.rawValue)
-        collectionView.register(AddSubtaskCell.self, forCellWithReuseIdentifier: CellType.addSubtask.rawValue)
     }
     
+    // MARK: - Collection View Data Source
+
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
         return subtasksArray.count + 1
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.item == subtasksArray.count {
-            
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellType.addSubtask.rawValue, for: indexPath) as! AddSubtaskCell
             
             cell.textField.isUserInteractionEnabled = false
@@ -52,32 +56,7 @@ class AddingSubtasksList: BaseSubtasksList {
         }
     }
     
-    @objc fileprivate func addSubtask(gesture: UIGestureRecognizer) {
-        
-        let view = gesture.view
-        var superview = view?.superview
-        
-        while superview != nil {
-            if let cell = superview as? AddSubtaskCell {
-                
-                cell.textField.isUserInteractionEnabled = true
-                cell.textField.becomeFirstResponder()
-                cell.textField.delegate = self
-                return
-            }
-            superview = superview?.superview
-        }
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        if textField.text! == "" {
-            return false
-        } else {
-            saveSubtask()
-            return true
-        }
-    }
+    // MARK: - Public Methods
     
     func saveSubtask() {
         
@@ -99,4 +78,36 @@ class AddingSubtasksList: BaseSubtasksList {
         collectionView.reloadData()
         self.view.heightAnchor.constraint(greaterThanOrEqualToConstant: CGFloat(self.numItems ?? 0) * self.itemHeight).isActive = true
     }
+    
+    // MARK: - Private Methods
+
+    @objc private func addSubtask(gesture: UIGestureRecognizer) {
+        
+        let view = gesture.view
+        var superview = view?.superview
+        
+        while superview != nil {
+            if let cell = superview as? AddSubtaskCell {
+                
+                cell.textField.isUserInteractionEnabled = true
+                cell.textField.becomeFirstResponder()
+                cell.textField.delegate = self
+                return
+            }
+            superview = superview?.superview
+        }
+    }
+    
+    // MARK: - Text Field Delegate
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        if textField.text! == "" {
+            return false
+        } else {
+            saveSubtask()
+            return true
+        }
+    }
+    
 }
