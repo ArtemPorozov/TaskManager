@@ -43,6 +43,7 @@
 		048653A92479989E001B453C /* CalendarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048653A82479989E001B453C /* CalendarController.swift */; };
 		048653AB24799916001B453C /* StatisticsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 048653AA24799916001B453C /* StatisticsController.swift */; };
 		049A46B32479EFB5002510BF /* MonthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049A46B22479EFB5002510BF /* MonthView.swift */; };
+		049E484424DFFA8400F6CCA9 /* BaseTaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049E484324DFFA8400F6CCA9 /* BaseTaskController.swift */; };
 		04CD66932479FAFF0095FFC8 /* WeekdaysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CD66922479FAFF0095FFC8 /* WeekdaysView.swift */; };
 		6777F0631C738647A58D7948 /* Pods_TaskManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85ECE7513F6CF7706AEFDAC6 /* Pods_TaskManager.framework */; };
 /* End PBXBuildFile section */
@@ -86,6 +87,7 @@
 		048653A82479989E001B453C /* CalendarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarController.swift; sourceTree = "<group>"; };
 		048653AA24799916001B453C /* StatisticsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsController.swift; sourceTree = "<group>"; };
 		049A46B22479EFB5002510BF /* MonthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthView.swift; sourceTree = "<group>"; };
+		049E484324DFFA8400F6CCA9 /* BaseTaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTaskController.swift; sourceTree = "<group>"; };
 		04CD66922479FAFF0095FFC8 /* WeekdaysView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekdaysView.swift; sourceTree = "<group>"; };
 		39F960512B39ABC14195E6C3 /* Pods-TaskManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaskManager.release.xcconfig"; path = "Target Support Files/Pods-TaskManager/Pods-TaskManager.release.xcconfig"; sourceTree = "<group>"; };
 		85ECE7513F6CF7706AEFDAC6 /* Pods_TaskManager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TaskManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -179,6 +181,7 @@
 				045D6CE024A3DF5600EFFDE2 /* Task */,
 				0467619D248EA2AE00732AB8 /* Adding Task */,
 				045D6CEC24B1181100EFFDE2 /* Task for Selected Day */,
+				049E484324DFFA8400F6CCA9 /* BaseTaskController.swift */,
 			);
 			path = "List of Tasks";
 			sourceTree = "<group>";
@@ -431,6 +434,7 @@
 				046761A2248EC1F100732AB8 /* SubtaskCell.swift in Sources */,
 				04676187247DB45700732AB8 /* TasksListController.swift in Sources */,
 				049A46B32479EFB5002510BF /* MonthView.swift in Sources */,
+				049E484424DFFA8400F6CCA9 /* BaseTaskController.swift in Sources */,
 				04676195248061F900732AB8 /* DayHeaderCell.swift in Sources */,
 				0467619324804DA400732AB8 /* TaskNameHeaderCell.swift in Sources */,
 				046761912480440B00732AB8 /* TasksNameCell.swift in Sources */,
