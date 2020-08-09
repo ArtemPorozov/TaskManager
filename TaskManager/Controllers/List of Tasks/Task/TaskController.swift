@@ -55,8 +55,8 @@ final class TaskController: UIViewController, UITextFieldDelegate {
     
     init(task: Task) {
         self.task = task
-        super.init(nibName: nil, bundle: nil)
         self.subtasksList.subtasks = task.subtasks
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
