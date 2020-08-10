@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class AddingSubtasksList: BaseSubtasksList {
+final class AddingSubtasksList: BaseSubtasksList {
     
     // MARK: - Public Properties
 
