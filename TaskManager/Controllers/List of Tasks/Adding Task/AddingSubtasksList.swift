@@ -65,18 +65,20 @@ final class AddingSubtasksList: BaseSubtasksList {
         
         let textField = cell.textField
         
-        let subtask = Subtask()
-        subtask.name = textField.text!
-        self.subtasksArray.append(subtask)
-        
-        self.subtasks.append(subtask)
-        
-        textField.resignFirstResponder()
-        
-        self.numItems! += 1
-        
-        collectionView.reloadData()
-        self.view.heightAnchor.constraint(greaterThanOrEqualToConstant: CGFloat(self.numItems ?? 0) * self.itemHeight).isActive = true
+        if let textFieldText = textField.text, textFieldText != "" {
+            let subtask = Subtask()
+            subtask.name = textField.text!
+            self.subtasksArray.append(subtask)
+            
+            self.subtasks.append(subtask)
+            
+            textField.resignFirstResponder()
+            
+            self.numItems! += 1
+            
+            collectionView.reloadData()
+            self.view.heightAnchor.constraint(greaterThanOrEqualToConstant: CGFloat(self.numItems ?? 0) * self.itemHeight).isActive = true
+        }
     }
     
     // MARK: - Private Methods
