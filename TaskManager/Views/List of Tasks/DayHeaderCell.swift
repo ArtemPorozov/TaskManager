@@ -8,11 +8,13 @@
 
 import UIKit
 
-class DayHeaderCell: UICollectionViewCell {
+final class DayHeaderCell: UICollectionViewCell {
     
+    // MARK: - Public Properties
+
     let dateLabel: UILabel = {
         let label = UILabel()
-        label.text = "9"
+        label.text = ""
         label.font = .systemFont(ofSize: 28)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -21,18 +23,17 @@ class DayHeaderCell: UICollectionViewCell {
     
     let weekdayLabel: UILabel = {
         let label = UILabel()
-        label.text = "Fr"
+        label.text = ""
         label.font = .systemFont(ofSize: 20)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
+    // MARK: - Initializers
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        backgroundColor = .white
-        
         setupView()
     }
     
@@ -40,8 +41,12 @@ class DayHeaderCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    fileprivate func setupView() {
+    // MARK: - Private Methods
+
+    private func setupView() {
         
+        backgroundColor = .white
+
         let stackView = UIStackView(arrangedSubviews: [
             dateLabel,
             weekdayLabel
@@ -56,4 +61,5 @@ class DayHeaderCell: UICollectionViewCell {
         stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
         stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
     }
+    
 }

@@ -8,8 +8,10 @@
 
 import UIKit
 
-class DayCell: UICollectionViewCell {
+final class DayCell: UICollectionViewCell {
     
+    // MARK: - Public Properties
+
     let progressLabel: UILabel = {
         let label = UILabel()
         label.text = ""
@@ -20,11 +22,10 @@ class DayCell: UICollectionViewCell {
         return label
     }()
     
+    // MARK: - Initializers
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        backgroundColor = .white
-        
         setupView()
     }
     
@@ -32,14 +33,17 @@ class DayCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    fileprivate func setupView() {
+    // MARK: - Private Methods
+
+    private func setupView() {
         
+//        backgroundColor = .white
+
         addSubview(progressLabel)
         progressLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
         progressLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
         progressLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
         progressLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
     }
+    
 }
-
-

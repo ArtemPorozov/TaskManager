@@ -8,22 +8,23 @@
 
 import UIKit
 
-class TaskNameHeaderCell: UICollectionViewCell {
+final class TaskNameHeaderCell: UICollectionViewCell {
     
+    // MARK: - Public Properties
+
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Tasks"
+        label.text = ""
         label.font = .boldSystemFont(ofSize: 36)
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
+    // MARK: - Initializers
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        backgroundColor = .white
-        
         setupView()
     }
     
@@ -31,12 +32,17 @@ class TaskNameHeaderCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    fileprivate func setupView() {
+    // MARK: - Private Methods
+
+    private func setupView() {
         
+        backgroundColor = .white
+
         addSubview(nameLabel)
         nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
         nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
         nameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
     }
+    
 }
