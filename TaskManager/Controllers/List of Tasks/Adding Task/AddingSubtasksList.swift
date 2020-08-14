@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-final class AddingSubtasksList: BaseSubtasksList {
+final class AddingSubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDelegate {
     
     // MARK: - Public Properties
 
@@ -47,7 +47,8 @@ final class AddingSubtasksList: BaseSubtasksList {
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellType.subtask.rawValue, for: indexPath) as! SubtaskCell
-            
+            cell.delegate = self
+
             let subtask = self.subtasksArray[indexPath.item]
             cell.subtaskNumLabel.text = "\(indexPath.item + 1)"
             cell.subtaskLabel.text = subtask.name
@@ -110,6 +111,29 @@ final class AddingSubtasksList: BaseSubtasksList {
             saveSubtask()
             return true
         }
+    }
+    
+    // MARK: - Swipeable Collection View Cell Delegate
+    
+    func deleteLabelTapped(inCell cell: UICollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        
+        self.subtasksArray.remove(at: indexPath.item)
+        self.numItems! -= 1
+        
+        collectionView.reloadData()
+        self.view.heightAnchor.constraint(greaterThanOrEqualToConstant: CGFloat(self.numItems ?? 0) * self.itemHeight).isActive = true
+        
+        let realm = try! Realm()
+
+        try! realm.write {
+            let subtasks = self.subtasks
+            subtasks.remove(at: indexPath.item)
+        }
+
+        collectionView.performBatchUpdates({
+            self.collectionView.deleteItems(at: [indexPath])
+        })
     }
     
 }

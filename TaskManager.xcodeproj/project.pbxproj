@@ -15,7 +15,6 @@
 		045D6CEB24AF487E00EFFDE2 /* TaskForDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D6CEA24AF487E00EFFDE2 /* TaskForDay.swift */; };
 		045D6CEE24B1185100EFFDE2 /* TaskForSelectedDayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D6CED24B1185100EFFDE2 /* TaskForSelectedDayController.swift */; };
 		045D6CF024B2633000EFFDE2 /* SubtasksListForDayTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D6CEF24B2632F00EFFDE2 /* SubtasksListForDayTask.swift */; };
-		045D6CF224B2657B00EFFDE2 /* AddingSubtaskController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D6CF124B2657B00EFFDE2 /* AddingSubtaskController.swift */; };
 		045D6CF424B51A0E00EFFDE2 /* SelectingSubtasksController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D6CF324B51A0E00EFFDE2 /* SelectingSubtasksController.swift */; };
 		045D6CF624B6454400EFFDE2 /* SelectableSubtaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D6CF524B6454400EFFDE2 /* SelectableSubtaskCell.swift */; };
 		0467617E247AB1A700732AB8 /* CalendarDateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0467617D247AB1A700732AB8 /* CalendarDateCell.swift */; };
@@ -35,7 +34,6 @@
 		046761A92496452600732AB8 /* TaskDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046761A82496452600732AB8 /* TaskDay.swift */; };
 		0486539324799474001B453C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0486539224799474001B453C /* AppDelegate.swift */; };
 		0486539524799474001B453C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0486539424799474001B453C /* SceneDelegate.swift */; };
-		0486539724799474001B453C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0486539624799474001B453C /* ViewController.swift */; };
 		0486539A24799474001B453C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0486539824799474001B453C /* Main.storyboard */; };
 		0486539C2479947E001B453C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0486539B2479947E001B453C /* Assets.xcassets */; };
 		0486539F2479947E001B453C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0486539D2479947E001B453C /* LaunchScreen.storyboard */; };
@@ -58,7 +56,6 @@
 		045D6CEA24AF487E00EFFDE2 /* TaskForDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskForDay.swift; sourceTree = "<group>"; };
 		045D6CED24B1185100EFFDE2 /* TaskForSelectedDayController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskForSelectedDayController.swift; sourceTree = "<group>"; };
 		045D6CEF24B2632F00EFFDE2 /* SubtasksListForDayTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtasksListForDayTask.swift; sourceTree = "<group>"; };
-		045D6CF124B2657B00EFFDE2 /* AddingSubtaskController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingSubtaskController.swift; sourceTree = "<group>"; };
 		045D6CF324B51A0E00EFFDE2 /* SelectingSubtasksController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectingSubtasksController.swift; sourceTree = "<group>"; };
 		045D6CF524B6454400EFFDE2 /* SelectableSubtaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableSubtaskCell.swift; sourceTree = "<group>"; };
 		0467617D247AB1A700732AB8 /* CalendarDateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDateCell.swift; sourceTree = "<group>"; };
@@ -79,7 +76,6 @@
 		0486538F24799474001B453C /* TaskManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TaskManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0486539224799474001B453C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0486539424799474001B453C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		0486539624799474001B453C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0486539924799474001B453C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0486539B2479947E001B453C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0486539E2479947E001B453C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -123,7 +119,6 @@
 				045D6CED24B1185100EFFDE2 /* TaskForSelectedDayController.swift */,
 				045D6CEF24B2632F00EFFDE2 /* SubtasksListForDayTask.swift */,
 				045D6CF324B51A0E00EFFDE2 /* SelectingSubtasksController.swift */,
-				045D6CF124B2657B00EFFDE2 /* AddingSubtaskController.swift */,
 			);
 			path = "Task for Selected Day";
 			sourceTree = "<group>";
@@ -268,7 +263,6 @@
 				04676181247AB8B400732AB8 /* Controllers */,
 				0486539224799474001B453C /* AppDelegate.swift */,
 				0486539424799474001B453C /* SceneDelegate.swift */,
-				0486539624799474001B453C /* ViewController.swift */,
 				0486539824799474001B453C /* Main.storyboard */,
 				0486539B2479947E001B453C /* Assets.xcassets */,
 				0486539D2479947E001B453C /* LaunchScreen.storyboard */,
@@ -409,9 +403,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				045D6CF224B2657B00EFFDE2 /* AddingSubtaskController.swift in Sources */,
 				045D6CF624B6454400EFFDE2 /* SelectableSubtaskCell.swift in Sources */,
-				0486539724799474001B453C /* ViewController.swift in Sources */,
 				04CD66932479FAFF0095FFC8 /* WeekdaysView.swift in Sources */,
 				0467619A2482A47200732AB8 /* DayTasksProgressLayout.swift in Sources */,
 				0467619C248D952200732AB8 /* AddingTaskController.swift in Sources */,
