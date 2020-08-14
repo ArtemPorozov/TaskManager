@@ -152,13 +152,18 @@ class TasksListController: UICollectionViewController, AddingTaskControllerDeleg
             if indexPath.section == 0 {
                 return nil
             } else {
-                let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { actions -> UIMenu? in
-                    let action = UIAction(title: "Delete", image: UIImage(systemName: "trash.fill")) { action in
-                        self.deleteTaskForDay(indexPath: indexPath)
+                let cell = collectionView.cellForItem(at: indexPath) as! DayCell
+                if cell.progressLabel.text == "+" {
+                    let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { actions -> UIMenu? in
+                        let action = UIAction(title: "Delete", image: UIImage(systemName: "trash.fill")) { action in
+                            self.deleteTaskForDay(indexPath: indexPath)
+                        }
+                        return UIMenu(title: "", children: [action])
                     }
-                    return UIMenu(title: "", children: [action])
+                    return configuration
+                } else {
+                    return nil
                 }
-                return configuration
             }
         }
     }

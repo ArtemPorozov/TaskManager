@@ -15,10 +15,6 @@ final class AddingSubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDel
 
     var subtasks = List<Subtask>()
     
-    // MARK: - Private Properties
-
-    private var subtasksArray = [Subtask]()
-
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -32,12 +28,12 @@ final class AddingSubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDel
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return subtasksArray.count + 1
+        return subtasks.count + 1
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        if indexPath.item == subtasksArray.count {
+        if indexPath.item == subtasks.count {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellType.addSubtask.rawValue, for: indexPath) as! AddSubtaskCell
             
             cell.textField.isUserInteractionEnabled = false
@@ -49,7 +45,7 @@ final class AddingSubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDel
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellType.subtask.rawValue, for: indexPath) as! SubtaskCell
             cell.delegate = self
 
-            let subtask = self.subtasksArray[indexPath.item]
+            let subtask = self.subtasks[indexPath.item]
             cell.subtaskNumLabel.text = "\(indexPath.item + 1)"
             cell.subtaskLabel.text = subtask.name
             
@@ -69,10 +65,8 @@ final class AddingSubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDel
         if let textFieldText = textField.text, textFieldText != "" {
             let subtask = Subtask()
             subtask.name = textField.text!
-            self.subtasksArray.append(subtask)
-            
             self.subtasks.append(subtask)
-            
+                        
             textField.resignFirstResponder()
             
             self.numItems! += 1
@@ -117,12 +111,6 @@ final class AddingSubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDel
     
     func deleteLabelTapped(inCell cell: UICollectionViewCell) {
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
-        
-        self.subtasksArray.remove(at: indexPath.item)
-        self.numItems! -= 1
-        
-        collectionView.reloadData()
-        self.view.heightAnchor.constraint(greaterThanOrEqualToConstant: CGFloat(self.numItems ?? 0) * self.itemHeight).isActive = true
         
         let realm = try! Realm()
 
