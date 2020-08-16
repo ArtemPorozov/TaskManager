@@ -49,8 +49,8 @@ final class TaskController: BaseTaskController {
         // dismissing the keyboard by tapping the screen
         setupGesture()
         
-        self.textField.delegate = self
-        self.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        textField.delegate = self
+        textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
     }
     
     override func viewDidLayoutSubviews() {

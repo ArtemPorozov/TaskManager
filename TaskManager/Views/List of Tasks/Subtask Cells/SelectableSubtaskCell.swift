@@ -8,9 +8,9 @@
 
 import UIKit
 
-class SelectableSubtaskCell: UICollectionViewCell {
+final class SelectableSubtaskCell: UICollectionViewCell {
     
-    let stackView = UIStackView(frame: .zero)
+    // MARK: - Public Properties
     
     let isSelectedLabel: UILabel = {
         let label = UILabel()
@@ -37,11 +37,17 @@ class SelectableSubtaskCell: UICollectionViewCell {
         return label
     }()
     
-    let separatorView: UIView = {
+    // MARK: - Private Properties
+    
+    private let stackView = UIStackView(frame: .zero)
+    
+    private let separatorView: UIView = {
         let view = UIView()
         view.backgroundColor = .init(white: 0.3, alpha: 0.3)
         return view
     }()
+    
+    // MARK: - Initializers
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -52,12 +58,14 @@ class SelectableSubtaskCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    fileprivate func initializeViews() {
+    // MARK: - Private Methods
+    
+    private func initializeViews() {
         
         backgroundColor = .white
-                
-        self.stackView.addArrangedSubview(isSelectedLabel)
-        self.stackView.addArrangedSubview(subtaskLabel)
+        
+        stackView.addArrangedSubview(isSelectedLabel)
+        stackView.addArrangedSubview(subtaskLabel)
         
         stackView.axis = .horizontal
         stackView.alignment = .center
@@ -78,4 +86,5 @@ class SelectableSubtaskCell: UICollectionViewCell {
         separatorView.leadingAnchor.constraint(equalTo: subtaskLabel.leadingAnchor).isActive = true
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
+    
 }

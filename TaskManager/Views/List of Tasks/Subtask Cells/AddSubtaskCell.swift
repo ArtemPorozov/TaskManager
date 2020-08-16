@@ -8,9 +8,9 @@
 
 import UIKit
 
-class AddSubtaskCell: UICollectionViewCell {
+final class AddSubtaskCell: UICollectionViewCell {
     
-    let stackView = UIStackView(frame: .zero)
+    // MARK: - Public Properties
     
     let addSubtaskLabel: UILabel = {
         let label = UILabel()
@@ -28,7 +28,6 @@ class AddSubtaskCell: UICollectionViewCell {
     let textField: UITextField = {
         let textField = UITextField()
         textField.font = .systemFont(ofSize: 18)
-//        textField.borderStyle = .roundedRect
         textField.textAlignment = .left
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.backgroundColor = .white
@@ -36,27 +35,35 @@ class AddSubtaskCell: UICollectionViewCell {
         return textField
     }()
     
-    let separatorView: UIView = {
+    // MARK: - Private Properties
+    
+    private let stackView = UIStackView(frame: .zero)
+    
+    private let separatorView: UIView = {
         let view = UIView()
         view.backgroundColor = .init(white: 0.3, alpha: 0.3)
         return view
     }()
     
+    // MARK: - Initializers
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        initializeViews()
+        setupViews()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    fileprivate func initializeViews() {
+    // MARK: - Private Methods
+    
+    private func setupViews() {
         
         backgroundColor = .white
-                
-        self.stackView.addArrangedSubview(addSubtaskLabel)
-        self.stackView.addArrangedSubview(textField)
+        
+        stackView.addArrangedSubview(addSubtaskLabel)
+        stackView.addArrangedSubview(textField)
         
         stackView.axis = .horizontal
         stackView.alignment = .center
@@ -77,4 +84,5 @@ class AddSubtaskCell: UICollectionViewCell {
         separatorView.leadingAnchor.constraint(equalTo: textField.leadingAnchor).isActive = true
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
+    
 }

@@ -8,11 +8,12 @@
 
 import UIKit
 
-class SubtaskCell: SwipeableCollectionViewCell {
+final class SubtaskCell: SwipeableCollectionViewCell {
     
+    // MARK: - Public Properties
+
     let subtaskNumLabel: UILabel = {
         let label = UILabel()
-        label.text = "1"
         label.font = .systemFont(ofSize: 18)
         label.textAlignment = .center
         label.heightAnchor.constraint(equalToConstant: 22).isActive = true
@@ -24,7 +25,6 @@ class SubtaskCell: SwipeableCollectionViewCell {
     
     let subtaskLabel: UILabel = {
         let label = UILabel()
-        label.text = "Reading"
         label.font = .systemFont(ofSize: 18)
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -33,22 +33,26 @@ class SubtaskCell: SwipeableCollectionViewCell {
         return label
     }()
     
-    let separatorView: UIView = {
+    // MARK: - Private Properties
+
+    private let separatorView: UIView = {
         let view = UIView()
         view.backgroundColor = .init(white: 0.3, alpha: 0.3)
         return view
     }()
     
+    // MARK: - Initializers
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        initializeViews()
+        setupViews()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    fileprivate func initializeViews() {
+    private func setupViews() {
         
         backgroundColor = .white
         
@@ -74,4 +78,5 @@ class SubtaskCell: SwipeableCollectionViewCell {
         separatorView.leadingAnchor.constraint(equalTo: subtaskLabel.leadingAnchor).isActive = true
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
+    
 }

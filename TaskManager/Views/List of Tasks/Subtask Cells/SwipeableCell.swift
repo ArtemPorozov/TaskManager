@@ -14,9 +14,14 @@ protocol SwipeableCollectionViewCellDelegate: class {
 
 class SwipeableCollectionViewCell: UICollectionViewCell {
     
-//    var isGoingToBeDeleted = false
+    // MARK: - Public Properties
+
+    let visibleContainerView = UIView()
+    weak var delegate: SwipeableCollectionViewCellDelegate?
     
-    let scrollView: UIScrollView = {
+    // MARK: - Private Properties
+
+    private let scrollView: UIScrollView = {
         let scrollView = UIScrollView(frame: .zero)
         scrollView.isPagingEnabled = true
         scrollView.showsVerticalScrollIndicator = false
@@ -24,10 +29,9 @@ class SwipeableCollectionViewCell: UICollectionViewCell {
         return scrollView
     }()
     
-    let visibleContainerView = UIView()
-    let hiddenContainerView = UIView()
+    private let hiddenContainerView = UIView()
     
-    let deleteLabel: UILabel = {
+    private let deleteLabel: UILabel = {
         let label = UILabel()
         label.text = "Delete"
         label.textColor = .white
@@ -39,7 +43,7 @@ class SwipeableCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    weak var delegate: SwipeableCollectionViewCellDelegate?
+    // MARK: - Initializers
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,6 +55,8 @@ class SwipeableCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Private Methods
+
     private func setupSubviews() {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -84,25 +90,5 @@ class SwipeableCollectionViewCell: UICollectionViewCell {
     @objc private func deleteLabelTapped() {
         delegate?.deleteLabelTapped(inCell: self)
     }
-    
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//        // when the orientation changes and the cell is open -> update the content offset for the new cell width
-//        if scrollView.contentOffset.x > 0 {
-//            scrollView.contentOffset.x = scrollView.frame.width
-//        }
-//    }
-    
-}
 
-extension UIView {
-    
-    func pinEdgesToSuperView() {
-        guard let superView = superview else { return }
-        translatesAutoresizingMaskIntoConstraints = false
-        topAnchor.constraint(equalTo: superView.topAnchor).isActive = true
-        leftAnchor.constraint(equalTo: superView.leftAnchor).isActive = true
-        bottomAnchor.constraint(equalTo: superView.bottomAnchor).isActive = true
-        rightAnchor.constraint(equalTo: superView.rightAnchor).isActive = true
-    }
 }

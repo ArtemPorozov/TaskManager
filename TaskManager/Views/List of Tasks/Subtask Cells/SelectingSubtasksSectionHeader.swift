@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SelectingSubtasksSectionHeader: UICollectionReusableView {
+final class SelectingSubtasksSectionHeader: UICollectionReusableView {
     
     // MARK: - Public Properties
 
