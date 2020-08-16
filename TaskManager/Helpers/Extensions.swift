@@ -8,7 +8,7 @@
 
 import UIKit
 
-//get first day of the month
+// getting first day of the month
 extension Date {
     var weekday: Int {
         return Calendar.current.component(.weekday, from: self)

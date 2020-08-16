@@ -12,29 +12,73 @@ protocol MonthViewDelegate: class {
     func didChangeMonth(month: Int, year: Int)
 }
 
-class MonthView: UIView {
+final class MonthView: UIView {
     
-    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    var currentMonthIndex: Int = 0
-    var currentYear: Int = 0
-    
-    var presentMonthIndex: Int = 0
-    var presentYear: Int = 0
+    // MARK: - Public Properties
     
     weak var delegate: MonthViewDelegate?
     
+    // MARK: - Private Properties
+    
+    private let monthLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.font = .boldSystemFont(ofSize: 24)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let previousMonthButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("＜", for: .normal)
+        button.tintColor = .black
+        button.titleLabel?.font = .boldSystemFont(ofSize: 24)
+        button.addTarget(self, action: #selector(changeMonth), for: .touchUpInside)
+        button.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 96).isActive = true
+        return button
+    }()
+    
+    private let nextMonthButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("＞", for: .normal)
+        button.tintColor = .black
+        button.titleLabel?.font = .boldSystemFont(ofSize: 24)
+        button.addTarget(self, action: #selector(changeMonth), for: .touchUpInside)
+        button.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        button.widthAnchor.constraint(equalToConstant: 96).isActive = true
+        return button
+    }()
+    
+    private var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    private var currentMonthIndex: Int = 0
+    private var currentYear: Int = 0
+    
+    private var presentMonthIndex: Int = 0
+    private var presentYear: Int = 0
+    
+    // MARK: - Initializers
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        initializeData()
+        setupViews()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Private Methods
+    
+    private func initializeData() {
         currentMonthIndex = Calendar.current.component(.month, from: Date()) - 1
         currentYear = Calendar.current.component(.year, from: Date())
         presentMonthIndex = currentMonthIndex
         presentYear = currentYear
-        
-        setupViews()
     }
     
-    fileprivate func setupViews() {
+    private func setupViews() {
         
         let stackView = UIStackView(arrangedSubviews: [
             previousMonthButton,
@@ -47,7 +91,7 @@ class MonthView: UIView {
         
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.spacing = 16
+        stackView.spacing = 4
         
         addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -55,45 +99,9 @@ class MonthView: UIView {
         stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
         stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
         stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
-
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    let monthLabel: UILabel = {
-        let label = UILabel()
-        label.text = "February 2020"
-        label.textAlignment = .center
-        label.font = .boldSystemFont(ofSize: 24)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
-    let previousMonthButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("＜", for: .normal)
-        button.tintColor = .black
-        button.titleLabel?.font = .boldSystemFont(ofSize: 24)
-        button.addTarget(self, action: #selector(changeMonth), for: .touchUpInside)
-        button.heightAnchor.constraint(equalToConstant: 32).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 32).isActive = true
-        return button
-    }()
-
-    let nextMonthButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("＞", for: .normal)
-        button.tintColor = .black
-        button.titleLabel?.font = .boldSystemFont(ofSize: 24)
-        button.addTarget(self, action: #selector(changeMonth), for: .touchUpInside)
-        button.heightAnchor.constraint(equalToConstant: 32).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 32).isActive = true
-        return button
-    }()
-    
-    @objc fileprivate func changeMonth(button: UIButton) {
+    @objc private func changeMonth(button: UIButton) {
         
         switch button {
         case previousMonthButton:
@@ -114,6 +122,5 @@ class MonthView: UIView {
         monthLabel.text = "\(months[presentMonthIndex]) \(presentYear)"
         delegate?.didChangeMonth(month: presentMonthIndex, year: presentYear)
     }
+    
 }
-
-

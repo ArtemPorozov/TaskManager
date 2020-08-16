@@ -36,9 +36,6 @@ final class DayCell: UICollectionViewCell {
     // MARK: - Private Methods
 
     private func setupView() {
-        
-//        backgroundColor = .white
-
         addSubview(progressLabel)
         progressLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
         progressLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true

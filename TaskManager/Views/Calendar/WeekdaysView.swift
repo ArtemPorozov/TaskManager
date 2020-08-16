@@ -8,11 +8,21 @@
 
 import UIKit
 
-class WeekdaysView: UIView {
+final class WeekdaysView: UIView {
+    
+    // MARK: - Private Properties
+    
+    private let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.distribution = .fillEqually
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    // MARK: - Initializers
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         setupViews()
     }
     
@@ -20,7 +30,9 @@ class WeekdaysView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupViews() {
+    // MARK: - Private Methods
+    
+    private func setupViews() {
         
         addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -39,10 +51,4 @@ class WeekdaysView: UIView {
         }
     }
     
-    let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.distribution = .fillEqually
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
 }

@@ -35,7 +35,6 @@ final class TasksNameCell: UICollectionViewCell {
     // MARK: - Private Methods
 
     private func setupView() {
-
         addSubview(nameLabel)
         nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
         nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true

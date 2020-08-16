@@ -8,22 +8,12 @@
 
 import UIKit
 
-class CalendarDateCell: UICollectionViewCell {
+final class CalendarDateCell: UICollectionViewCell {
         
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        backgroundColor = .white
-        setupViews()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+    // MARK: - Public Properties
+
     let dateLabel: UILabel = {
         let label = UILabel()
-        label.text = "12"
         label.font = .systemFont(ofSize: 18)
         label.layer.cornerRadius = 19
         label.layer.masksToBounds = true
@@ -32,12 +22,28 @@ class CalendarDateCell: UICollectionViewCell {
         return label
     }()
     
-    fileprivate func setupViews() {
+    // MARK: - Initializers
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupViews()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Private Methods
+
+    private func setupViews() {
         
+        backgroundColor = .white
+
         addSubview(dateLabel)
         dateLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
         dateLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
         dateLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
         dateLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
     }
+    
 }

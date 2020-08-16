@@ -12,15 +12,7 @@ class TaskForDay: Object {
     
     @objc dynamic var name: String = ""
     @objc dynamic var id: String = ""
-//    @objc dynamic var day: TaskDay?
     @objc dynamic var dayId: String = ""
 
-    
-//    @objc dynamic var isCompleted: Bool = false
-    
-//    override class func primaryKey() -> String? {
-//        return "id"
-//    }
-    
     var subtasks = List<Subtask>()
 }
