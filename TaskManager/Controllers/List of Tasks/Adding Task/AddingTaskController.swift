@@ -259,7 +259,7 @@ final class AddingTaskController: UIViewController, UITextFieldDelegate {
     // MARK: - Text Field Delegate
     
     @objc func textFieldDidChange(_ textField: UITextField) {
-        if self.textField.text! == "" {
+        if self.textField.text == "" {
             self.navigationItem.rightBarButtonItem?.isEnabled = false
         } else {
             self.navigationItem.rightBarButtonItem?.isEnabled = true
@@ -267,7 +267,7 @@ final class AddingTaskController: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField.text! == "" {
+        if textField.text == "" {
             return false
         } else {
             textField.resignFirstResponder()

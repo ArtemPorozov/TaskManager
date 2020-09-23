@@ -106,7 +106,7 @@ class TasksListController: UICollectionViewController, AddingTaskControllerDeleg
                 print("DayCell")
                 let cell = collectionView.cellForItem(at: indexPath) as! DayCell
                 
-                if cell.progressLabel.text == "" && indexPath.item <= todaysDate && self.month <= self.currentMonth && self.year <= self.currentYear {
+                if cell.progressLabel.text == "" && ((indexPath.item <= self.todaysDate && self.month == self.currentMonth && self.year == self.currentYear) || (self.month < self.currentMonth && self.year == self.currentYear) || (self.year < self.currentYear)) {
                     cell.progressLabel.text = "+"
                     createDayEntity(for: indexPath)
                 } else if cell.progressLabel.text == "+" {

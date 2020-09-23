@@ -64,7 +64,7 @@ final class AddingSubtasksList: BaseSubtasksList, SwipeableCollectionViewCellDel
         
         if let textFieldText = textField.text, textFieldText != "" {
             let subtask = Subtask()
-            subtask.name = textField.text!
+            subtask.name = textFieldText
             self.subtasks.append(subtask)
                         
             textField.resignFirstResponder()
